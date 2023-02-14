@@ -1,0 +1,60 @@
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# gitlab build pipeline for rpm packages
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+# variables
+variables:
+  ARCH: noarch
+   
+# The ordering of elements in stages defines the ordering of jobs' execution
+stages:
+  - buildrpm
+
+# executed before each job
+before_script:
+  # extract semantic version out of git tag
+  # must be in format "1.0.3"
+  - export VERSION="${CI_COMMIT_TAG}"
+  - export RELEASE="$(rpmspec -q --qf '%{release}' ${CI_PROJECT_NAME}.spec)"
+  - echo "${VERSION}"
+  - ln -s /home/rpmbuilder/rpmbuild/${ARCH}/RPMS
+
+# executed after each job
+after_script:
+  #- rm secrets
+
+cache:
+  paths:
+  #- vendor/
+
+buildrpm/el8:
+  stage: buildrpm
+  image: jc21/rpmbuild-rocky8
+  tags:
+    - rpmbuild
+  variables:
+    DIST: el8
+  script:
+    - make srpm rpm 
+    - cp "/home/rpmbuilder/rpmbuild/RPMS/${ARCH}/${CI_PROJECT_NAME}-${VERSION}-${RELEASE}.${ARCH}.rpm" /var/tmp
+    - cp "/home/rpmbuilder/rpmbuild/SRPMS/${CI_PROJECT_NAME}-${VERSION}-${RELEASE}.src.rpm" /var/tmp
+  only:
+    - tags
+  except:
+    - branches
+
+buildrpm/el7:
+  stage: buildrpm
+  image: jc21/rpmbuild-centos7
+  tags:
+    - rpmbuild
+  variables:
+    DIST: el7
+  script:
+    - make srpm rpm 
+    - cp "/home/rpmbuilder/rpmbuild/RPMS/${ARCH}/${CI_PROJECT_NAME}-${VERSION}-${RELEASE}.${ARCH}.rpm" /var/tmp
+    - cp "/home/rpmbuilder/rpmbuild/SRPMS/${CI_PROJECT_NAME}-${VERSION}-${RELEASE}.src.rpm" /var/tmp
+  only:
+    - tags
+  except:
+    - branches
