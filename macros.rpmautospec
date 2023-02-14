@@ -1,0 +1,30 @@
+%autorelease(e:s:pb:) %{?-p:0.}%{lua:
+    release_number = tonumber(rpm.expand("%{?_rpmautospec_release_number}%{!?_rpmautospec_release_number:1}"));
+    base_release_number = tonumber(rpm.expand("%{?-b*}%{!?-b:1}"));
+    print(release_number + base_release_number - 1);
+}%{?-e:.%{-e*}}%{?-s:.%{-s*}}%{?dist}
+
+%autochangelog %{lua:
+    os.setlocale("en_US.utf8")
+    fh = io.popen('git tag --sort=-v:refname')
+    tags = {}
+    for line in fh:lines() do
+	table.insert( tags, line)
+    end
+    io.close(fh)
+
+    for t=2, #tags do
+        fh = io.popen('LC_ALL=C git log -1 --date="format:%a %b %d %Y" --pretty="* %cd %an <%ae>" '.. tags[t-1])
+        print( fh:read("*l") .." ".. tags[t] .."\\n" )
+        io.close(fh)
+
+        fh = io.popen('git log --reverse --pretty="tformat:- %s%b" '.. tags[t] ..'..'.. tags[t-1] )
+        for line in fh:lines() do
+           if line ~= "" then
+              print( line .."\\n" )
+           end
+        end
+        io.close(fh)
+        print( "\\n" )
+    end
+}
