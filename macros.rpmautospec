@@ -4,6 +4,12 @@
     print(release_number + base_release_number - 1);
 }%{?-e:.%{-e*}}%{?-s:.%{-s*}}%{?dist}
 
+%autoversion %{lua:
+    fh = io.popen('LC_ALL=C git describe --abbrev=0 --tags')
+    print( fh:read("*l") )
+    io.close(fh)
+}
+
 %autochangelog %{lua:
     os.setlocale("en_US.utf8")
     fh = io.popen('git tag --sort=-v:refname')
