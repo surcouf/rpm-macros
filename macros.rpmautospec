@@ -6,7 +6,7 @@
 
 %autoversion %{lua:
     fh = io.popen('LC_ALL=C git describe --abbrev=0 --tags')
-    print( fh:read("*l") )
+    print( fh:read() )
     io.close(fh)
 }
 
