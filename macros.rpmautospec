@@ -10,15 +10,18 @@
 }
 %autochangelog %{lua:
     os.setlocale("en_US.utf8")
-    fh = io.popen('git tag --sort=-v:refname')
+    fh = io.popen('git tag|sort -Vr')
     tags = {}
     for line in fh:lines() do
         table.insert( tags, line)
     end
     io.close(fh)
     for t=1, #tags do
-        fh = io.popen('LC_ALL=C git log -1 --date="format:%a %b %d %Y" --pretty="* %cd %an <%ae>" '.. tags[t])
-        print( fh:read("*l") .." ".. tags[t] .."\\n" )
+        fh = io.popen('LC_ALL=C git log -1 --date=rfc --pretty="%cd" '.. tags[t])
+        commit_date = os.date("%a %b %d %Y", tonumber(fh:read("*l")) )
+        io.close(fh)
+        fh = io.popen('git log -1 --pretty="%an <%ae>" '.. tags[t])
+        print( "* ".. commit_date .." ".. fh:read("*l") .." ".. tags[t] .."\\n" )
         io.close(fh)
         if t < #tags then
             fh = io.popen('git log --reverse --pretty="tformat:- %s%b" '.. tags[t+1] ..'..'.. tags[t] )
