@@ -4,10 +4,7 @@ include:
 .buildrpm:
   before_script:
     - git config --global --add safe.directory ${PWD}
-    - export NAME=rpmautospec
-    - export VERSION="${CI_COMMIT_TAG}"
-    - export RELEASE="$(rpmspec -q --qf '%{release}' ${NAME}.spec)"
     - sudo yum-config-manager --disable '*' >/dev/null
     - sudo yum-config-manager --add-repo=${CONFIG_REPO_URL}
   script:
-    - rpmbuild -ba ${NAME}.spec)
+    - rpmbuild -ba rpmautospec.spec
