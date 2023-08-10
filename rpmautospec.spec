@@ -1,4 +1,4 @@
-%include macros.rpmautospec
+%{load:macros.rpmautospec}
 
 Name:           rpmautospec
 Version:        %autoversion
