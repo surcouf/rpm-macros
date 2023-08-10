@@ -1,24 +1,13 @@
 include:
   - remote: 'https://forge.dgfip.finances.rie.gouv.fr/dgfip/design/gitlab/gitlab-templates/-/raw/master/rpmbuild.gitlab-ci.yml'
 
-before_script:
-  - git config --global --add safe.directory ${PWD}
-  - export NAME=rpmautospec
-  - export VERSION="${CI_COMMIT_TAG}"
-  - export RELEASE="$(rpmspec -q --qf '%{release}' ${NAME}.spec)"
-  - sudo yum-config-manager --disable '*' >/dev/null
-  - sudo yum-config-manager --add-repo=${CONFIG_REPO_URL}
-
-.buildrpm: &buildrpm
-  tags:
-    - rpmbuild
+.buildrpm:
+  before_script:
+    - git config --global --add safe.directory ${PWD}
+    - export NAME=rpmautospec
+    - export VERSION="${CI_COMMIT_TAG}"
+    - export RELEASE="$(rpmspec -q --qf '%{release}' ${NAME}.spec)"
+    - sudo yum-config-manager --disable '*' >/dev/null
+    - sudo yum-config-manager --add-repo=${CONFIG_REPO_URL}
   script:
-    - sudo -E yum-builddep -y ${NAME}.spec
     - rpmbuild -ba ${NAME}.spec)
-    - cp "/home/rpmbuilder/rpmbuild/RPMS/${ARCH}/${NAME}-${VERSION}-${RELEASE}.${ARCH}.rpm" /var/tmp
-    - cp "/home/rpmbuilder/rpmbuild/SRPMS/${NAME}-${VERSION}-${RELEASE}.src.rpm" /var/tmp
-    - '${CURL} -H "Authorization: Basic ${BASIC_AUTH}" -T /var/tmp/${NAME}-${VERSION}-${RELEASE}.${ARCH}.rpm ${REPO_URL}/'
-  only:
-    - tags
-  except:
-    - branches
