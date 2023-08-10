@@ -1,7 +1,7 @@
 %include macros.rpmautospec
 
-Name:           rpm-macros 
-Version:        %autversion
+Name:           rpmautospec
+Version:        %autoversion
 Release:        %autorelease
 Summary:        Package and CLI tool to generate release fields and changelogs
 
