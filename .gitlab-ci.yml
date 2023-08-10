@@ -4,9 +4,9 @@ include:
 before_script:
   - sudo cp macros.rpmautospec /etc/rpm/
   - git config --global --add safe.directory ${PWD}
-  - export NAME=${CI_PROJECT_NAME}
+  - export NAME=rpmautospec
   - export VERSION="${CI_COMMIT_TAG}"
-  - export RELEASE="$(rpmspec -q --qf '%{release}' ${CI_PROJECT_NAME}.spec)"
+  - export RELEASE="$(rpmspec -q --qf '%{release}' ${NAME}.spec)"
   - sudo yum-config-manager --disable '*' >/dev/null
   - sudo yum-config-manager --add-repo=${CONFIG_REPO_URL}
 
@@ -15,10 +15,10 @@ before_script:
     - rpmbuild
   script:
     - sudo -E yum-builddep -y ${NAME}.spec
-    - rpmbuild -ba ${CI_PROJECT_NAME}.spec)
-    - cp "/home/rpmbuilder/rpmbuild/RPMS/${ARCH}/${CI_PROJECT_NAME}-${VERSION}-${RELEASE}.${ARCH}.rpm" /var/tmp
-    - cp "/home/rpmbuilder/rpmbuild/SRPMS/${CI_PROJECT_NAME}-${VERSION}-${RELEASE}.src.rpm" /var/tmp
-    - '${CURL} -H "Authorization: Basic ${BASIC_AUTH}" -T /var/tmp/${CI_PROJECT_NAME}-${VERSION}-${RELEASE}.${ARCH}.rpm ${REPO_URL}/'
+    - rpmbuild -ba ${NAME}.spec)
+    - cp "/home/rpmbuilder/rpmbuild/RPMS/${ARCH}/${NAME}-${VERSION}-${RELEASE}.${ARCH}.rpm" /var/tmp
+    - cp "/home/rpmbuilder/rpmbuild/SRPMS/${NAME}-${VERSION}-${RELEASE}.src.rpm" /var/tmp
+    - '${CURL} -H "Authorization: Basic ${BASIC_AUTH}" -T /var/tmp/${NAME}-${VERSION}-${RELEASE}.${ARCH}.rpm ${REPO_URL}/'
   only:
     - tags
   except:
