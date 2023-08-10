@@ -1,14 +1,14 @@
-global %autorelease(e:s:pb:) %{?-p:0.}%{lua:
+%global autorelease(e:s:pb:) %{?-p:0.}%{lua:
     release_number = tonumber(rpm.expand("%{?_rpmautospec_release_number}%{!?_rpmautospec_release_number:1}"));
     base_release_number = tonumber(rpm.expand("%{?-b*}%{!?-b:1}"));
     print(release_number + base_release_number - 1);
 }%{?-e:.%{-e*}}%{?-s:.%{-s*}}%{?dist}
-global %autoversion %{lua:
+%global autoversion %{lua:
     fh = io.popen('LC_ALL=C git describe --abbrev=0 --tags')
     print( fh:read() )
     io.close(fh)
 }
-global %autochangelog %{lua:
+%global autochangelog %{lua:
     os.setlocale("en_US.utf8")
     fh = io.popen('git tag|sort -Vr')
     tags = {}
