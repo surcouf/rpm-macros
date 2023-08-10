@@ -2,7 +2,7 @@
 
 Name:           rpmautospec
 Version:        %autoversion
-Release:        %autorelease
+Release:        1%{?dist}
 Summary:        Package and CLI tool to generate release fields and changelogs
 
 License:        GPL
