@@ -3,10 +3,13 @@ include:
 
 .buildrpm:
   before_script:
-    - sudo cp rpmautospec.spec /etc/rpm/macros.rpmautospec
     - git config --global --add safe.directory ${PWD}
     - sudo yum-config-manager --disable '*' >/dev/null
     - sudo yum-config-manager --add-repo=${CONFIG_REPO_URL}
   script:
     - tar -czf $(rpm --eval '%_sourcedir')/$(rpmspec -q --qf "%{Name}-%{Version}.tar.gz\n" rpmautospec.spec) *
     - rpmbuild -ba rpmautospec.spec
+
+buildrpm/el7:
+  before_script:
+    - sudo cp rpmautospec.spec /etc/rpm/macros.rpmautospec
