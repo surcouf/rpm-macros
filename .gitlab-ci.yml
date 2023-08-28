@@ -7,5 +7,5 @@ include:
     - sudo yum-config-manager --disable '*' >/dev/null
     - sudo yum-config-manager --add-repo=${CONFIG_REPO_URL}
   script:
-    - tar -czf $(rpm --eval '%_sourcedir')/$(rpmspec -q --qf "%{Source0}\n") *
+    - tar -czf $(rpm --eval '%_sourcedir')/$(rpmspec -q --qf "%{Source0}\n" rpmautospec.spec) *
     - rpmbuild -ba rpmautospec.spec
