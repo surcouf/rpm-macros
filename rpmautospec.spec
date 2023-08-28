@@ -1,5 +1,3 @@
-%{load:macros.rpmautospec}
-
 Name:           rpmautospec
 Version:        %autoversion
 Release:        1%{?dist}
