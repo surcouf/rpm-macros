@@ -12,4 +12,4 @@ include:
 
 buildrpm/el7:
   before_script:
-    - sudo cp rpmautospec.spec /etc/rpm/macros.rpmautospec
+    - sudo cp macros.rpmautospec /etc/rpm/
