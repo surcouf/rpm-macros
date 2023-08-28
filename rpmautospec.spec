@@ -1,4 +1,6 @@
+%if "%{load:/dev/null}" == ""
 %{load:macros.rpmautospec}
+%endif
 
 Name:           rpmautospec
 Version:        %autoversion
