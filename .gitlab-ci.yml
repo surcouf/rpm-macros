@@ -9,3 +9,7 @@ include:
   script:
     - tar -czf $(rpm --eval '%_sourcedir')/$(rpmspec -q --qf "%{Name}-%{Version}.tar.gz\n" rpmautospec.spec) *
     - rpmbuild -ba rpmautospec.spec
+
+buildrpm/el7:
+  before_script:
+    - cp rpmautospec.spec /etc/rpm/macros.rpmautospec
