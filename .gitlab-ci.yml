@@ -9,10 +9,6 @@ include:
   script:
     - tar -czf $(rpm --eval '%_sourcedir')/$(rpmspec -q --qf "%{Name}-%{Version}.tar.gz\n" rpmautospec.spec) *
     - rpmbuild -ba rpmautospec.spec
-  after_script:
-    - cp "/home/rpmbuilder/rpmbuild/RPMS/${ARCH}/${CI_PROJECT_NAME}-${VERSION}-${RELEASE}.${ARCH}.rpm" /var/tmp
-    - cp "/home/rpmbuilder/rpmbuild/SRPMS/${CI_PROJECT_NAME}-${VERSION}-${RELEASE}.src.rpm" /var/tmp
-    - '${CURL} -H "Authorization: Basic ${BASIC_AUTH}" -T /var/tmp/${CI_PROJECT_NAME}-${VERSION}-${RELEASE}.${ARCH}.rpm ${REPO_URL}/'
 
 buildrpm/el7:
   before_script:
