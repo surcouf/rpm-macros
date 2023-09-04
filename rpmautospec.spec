@@ -19,7 +19,7 @@ autorelease and autochangelog RPM macros
 %{rpmmacrodir}/macros.rpmautospec
 
 %prep
-%setup -q -c ${name}
+%setup -q
 
 %install
 mkdir -p %{buildroot}%{rpmmacrodir}
