@@ -9,6 +9,7 @@ include:
   script:
     - tar --exclude-vcs --transform="s%^%${NAME}-${CI_COMMIT_TAG}/%rS" -czf $(rpm --eval '%_sourcedir')/${NAME}-${CI_COMMIT_TAG}.tar.gz *
     - rpmbuild -ba rpmautospec.spec
+    - '${CURL} -H "Authorization: Basic ${BASIC_AUTH}" -T $(rpm --eval "%_rpmdir")/${ARCH}/${CI_PROJECT_NAME}-${CI_COMMIT_TAG}-${RELEASE}.${ARCH}.rpm ${REPO_URL}/'
 
 buildrpm/el7:
   before_script:
